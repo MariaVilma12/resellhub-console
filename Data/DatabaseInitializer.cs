@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 
-namespace MarketplaceApp.Data
+namespace ResellHubConsole.Data
 {
     /// <summary>
     /// Responsible for creating and initializing the SQLite database.
