@@ -1,6 +1,8 @@
 ﻿using ResellHubConsole.Data;
 using ResellHubConsole.Services.Users;
 using ResellHubConsole.Models;
+using ResellHubConsole.Services.ItemList;
+using ResellHubConsole.Services.Menus;
 
 class Program
 {
@@ -78,7 +80,10 @@ class Program
 
         if (user != null)
         {
-            Console.WriteLine("Login successful!");
+            Console.WriteLine($"Welcome back, {user.Username}!");
+
+            var menu = new MainMenu();
+            menu.Show(user);
         }
         else
         {
