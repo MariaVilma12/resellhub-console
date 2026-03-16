@@ -15,6 +15,6 @@ public class Listing
     public ListingStatus Status { get; set; } = ListingStatus.Available;
 
     public int SellerId { get; set; }
-
+    public int? BuyerId { get; set; }
     public string SellerUsername { get; set; } = "";
 }

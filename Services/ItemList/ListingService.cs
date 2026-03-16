@@ -6,7 +6,7 @@ namespace ResellHubConsole.Services.ItemList;
 
 public class ListingService
 {
-    public List<Listing> GetAvailableListings()
+    public List<Listing> GetAvailableListings(int currentUserId)
     {
         var listings = new List<Listing>();
 
@@ -14,37 +14,41 @@ public class ListingService
         connection.Open();
 
         var command = connection.CreateCommand();
+
         command.CommandText =
-            @"SELECT l.Id, l.Title, l.Description, l.Category, l.Condition, l.Price,
-          u.Username
-          FROM Listings l
-          JOIN Users u ON l.SellerId = u.Id
-          WHERE l.Status = 'Available';";
+            @"
+    SELECT Id, Title, Description, Category, Condition, Price, Status, SellerId, BuyerId
+    FROM Listings
+    WHERE Status = 0
+    AND SellerId != $currentUserId;
+    ";
+
+        command.Parameters.AddWithValue("$currentUserId", currentUserId);
 
         using var reader = command.ExecuteReader();
 
         while (reader.Read())
         {
-            var listing = new Listing
+            listings.Add(new Listing
             {
                 Id = reader.GetInt32(0),
                 Title = reader.GetString(1),
-                Description = reader.GetString(2),
-                Category = Enum.Parse<Category>(reader.GetString(3)),
-                Condition = Enum.Parse<ItemCondition>(reader.GetString(4)),
+                Description = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                Category = (Category)reader.GetInt32(3),
+                Condition = (ItemCondition)reader.GetInt32(4),
                 Price = reader.GetDouble(5),
-                SellerUsername = reader.GetString(6)
-            };
-
-            listings.Add(listing);
+                Status = (ListingStatus)reader.GetInt32(6),
+                SellerId = reader.GetInt32(7),
+                BuyerId = reader.IsDBNull(8) ? null : reader.GetInt32(8)
+            });
         }
 
         return listings;
     }
-    
-    public void DisplayListings()
+
+    public void DisplayListings(User currentUser)
     {
-        var listings = GetAvailableListings();
+        var listings = GetAvailableListings(currentUser.Id);
 
         Console.WriteLine("\n=== Available Listings ===");
 
@@ -58,7 +62,7 @@ public class ListingService
             index++;
         }
 
-        Console.WriteLine("\nSelect a listing (0 to go back):");
+        Console.Write("\nSelect a listing (0 to go back): ");
 
         int choice = int.Parse(Console.ReadLine() ?? "0");
 
@@ -73,5 +77,25 @@ public class ListingService
         Console.WriteLine($"Condition: {selected.Condition}");
         Console.WriteLine($"Price: {selected.Price} kr");
         Console.WriteLine($"Description: {selected.Description}");
+
+        Console.WriteLine("\n1. Buy this item");
+        Console.WriteLine("2. Go back");
+
+        var option = Console.ReadLine();
+
+        if (option == "1")
+        {
+            var purchaseService = new PurchaseService();
+            purchaseService.BuyItem(selected, currentUser);
+
+            Console.Write("\nLeave review? (Y/N): ");
+            var answer = Console.ReadLine();
+
+            if (answer?.ToUpper() == "Y")
+            {
+                var reviewService = new ReviewService();
+                reviewService.LeaveReview(selected.SellerId, currentUser.Id);
+            }
+        }
     }
 }
