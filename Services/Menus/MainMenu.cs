@@ -112,7 +112,22 @@ public class MainMenu
 
         if (option == "1")
         {
-            _purchaseService.BuyItem(listing, user);
+            int transactionId = _purchaseService.BuyItem(listing, user);
+            if (transactionId == -1)
+                return;
+            // Ask review BEFORE leaving method
+            Console.Write($"\nWould you like to leave a review for {listing.SellerUsername}? (Y/N): ");
+            var answer = Console.ReadLine();
+
+            if (answer?.Trim().ToUpper() == "Y")
+            {
+                var reviewService = new ReviewService();
+                reviewService.LeaveReview(transactionId, user.Id, listing.SellerId);
+            }
+
+            // Optional pause so user can see output
+            Console.WriteLine("\nPress Enter to continue...");
+            Console.ReadLine();
         }
     }
 }

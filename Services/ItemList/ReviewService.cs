@@ -6,31 +6,32 @@ namespace ResellHubConsole.Services.ItemList;
 
 public class ReviewService
 {
-    public void LeaveReview(int sellerId, int reviewerId)
+    public void LeaveReview(int transactionId, int reviewerId, int sellerId)
     {
-        Console.Write("Rating (1-6): ");
-        int rating = int.Parse(Console.ReadLine() ?? "0");
+        Console.Write("\nRating (1-6): ");
+        int rating = int.Parse(Console.ReadLine() ?? "1");
 
-        Console.Write("Comment (optional): ");
-        string comment = Console.ReadLine() ?? "";
+        Console.Write("Comment (or press Enter to skip): ");
+        string? comment = Console.ReadLine();
 
         using var connection = Database.GetConnection();
         connection.Open();
 
         var command = connection.CreateCommand();
+        command.CommandText = @"
+    INSERT INTO Reviews (TransactionId, ReviewerId, SellerId, Rating, Comment)
+    VALUES ($transactionId, $reviewerId, $sellerId, $rating, $comment);
+    ";
 
-        command.CommandText =
-            @"INSERT INTO Reviews(SellerId, ReviewerId, Rating, Comment)
-          VALUES($seller,$reviewer,$rating,$comment)";
-
-        command.Parameters.AddWithValue("$seller", sellerId);
-        command.Parameters.AddWithValue("$reviewer", reviewerId);
+        command.Parameters.AddWithValue("$transactionId", transactionId);
+        command.Parameters.AddWithValue("$reviewerId", reviewerId);
+        command.Parameters.AddWithValue("$sellerId", sellerId);
         command.Parameters.AddWithValue("$rating", rating);
-        command.Parameters.AddWithValue("$comment", comment);
+        command.Parameters.AddWithValue("$comment", comment ?? "");
 
         command.ExecuteNonQuery();
 
-        Console.WriteLine("Review saved successfully.");
+        Console.WriteLine("Review submitted. Thank you!");
     }
     public void ShowMyReviews(int sellerId)
     {
