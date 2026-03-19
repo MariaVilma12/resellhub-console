@@ -1,50 +1,89 @@
-# Resellhub - Second-Hand Market (Console Application)
+#  ResellHub Console Application
 
-## Description
+##  Project Description
 
-This project is a console-based application that simulates a simplified online second-hand marketplace, similar to platforms like Finn.no or Facebook Marketplace.
-Users can register accounts, create listings, browse and search items, purchase items, and leave reviews for sellers. The application focuses on Object-Oriented Programming principles and modern C# features.
+ResellHub is a console-based second-hand marketplace application developed using C# and SQLite.  
+The application allows users to register, log in, create listings, browse items, purchase products, and leave reviews.
 
-## Features
+It simulates a real-world marketplace where users can act as both buyers and sellers, managing their listings and tracking transactions.
 
-### User Accounts
+---
 
-* Register and login with username and password
-* View personal profile
-* See listings, purchases, and reviews
+##  Features
+
+### User Management
+- Register new users
+- Login with username and password
 
 ### Listings
+- Create listings
+- Browse available items
+- Search listings
+- View listing details
 
-* Create, edit, and delete item listings 
-* Listings include title, description, category, condition, and price
-* Listings can be marked as Available or Sold
-
-### Browse & Search
-
-* View all available listings
-* Filter by category
-* Search by keywords (title or description)
-
-### Purchasing
-
-* Buy available items (not your own)
-* Transactions are stored for both buyer and seller
+### Transactions
+- Buy items from other users
+- Prevent buying own items
+- Automatically mark items as sold
+- Track:
+  - Items bought
+  - Items sold
 
 ### Reviews
+- Leave reviews after purchase
+- Rating system (1–6)
+- Optional comments
+- View reviews received
 
-* Leave a rating (1–6) after a purchase
-* Optional comment
-* Each user has an average rating
+### User Dashboard
+- My Listings
+- My Sales
+- My Purchases
+- My Reviews
 
-### Transaction History
+---
 
-* View items bought and sold
-* Each transaction includes item, price, date, and user
+## Design Decisions (OOP Concepts)
 
-### How to Run
+* Encapsulation : Each model (User, Listing, Transaction, Review) encapsulates its properties and behavior.
+ Sensitive data like passwords is managed inside the class.
 
-* Open the project in Rider
-* Build the solution
-  dotnet build
-* Run the application
-  dotnet run
+* Separation of Concerns : This improves maintainability and readability.
+
+* Abstraction : Database operations are handled inside service classes, hiding SQL details from the main program.
+
+* Reusability : Reusable components like InputHelper are used for input validation and reduce duplication.
+
+* Single Responsibility Principle (SRP) : Each class has one responsibility.
+
+
+---
+
+
+##  Technologies Used
+
+- C# (.NET Console Application)
+- SQLite (Microsoft.Data.Sqlite)
+- Object-Oriented Programming (OOP)
+
+---
+
+##  How to Build and Run
+
+###  Clone the Repository
+```bash
+git clone <your-repo-url>
+cd resellhub-console
+dotnet build
+dotnet run
+```
+
+---
+
+## AI tools were used during development for
+
+- Debugging C# errors
+- Fixing namespace and service issues
+- Designing OOP architecture
+- Writing SQL queries for SQLite
+- Improving code structure and best practices

@@ -12,6 +12,7 @@ public class MainMenu
     private readonly MyListingsService _myListingsService = new();
     private readonly PurchaseService _purchaseService = new();
     private readonly ReviewService _reviewService = new();
+    private readonly TransactionService _transactionService = new();
 
     public void Show(User user)
     {
@@ -22,9 +23,10 @@ public class MainMenu
             Console.WriteLine("2. Browse Listings");
             Console.WriteLine("3. Search Listings");
             Console.WriteLine("4. My Listings");
-            Console.WriteLine("5. My Purchases");
-            Console.WriteLine("6. My Reviews");
-            Console.WriteLine("7. Log Out");
+            Console.WriteLine("5. My Sales");
+            Console.WriteLine("6. My Purchases");
+            Console.WriteLine("7. My Reviews");
+            Console.WriteLine("8. Log Out");
 
             Console.Write("Select option: ");
             var choice = Console.ReadLine();
@@ -46,16 +48,19 @@ public class MainMenu
                 case "4":
                     _myListingsService.ShowMyListings(user.Id);
                     break;
-
-                case "5":
-                    _purchaseService.ShowMyPurchases(user.Id);
+				case "5":
+                   _transactionService.ShowMySales(user.Id);
                     break;
 
-                case "6":
-                    _reviewService.ShowMyReviews(user.Id);
+               case "6":
+                   _transactionService.ShowMyPurchases(user.Id);
                     break;
 
                 case "7":
+                    _reviewService.ShowMyReviews(user.Id);
+                    break;
+
+                case "8":
                     return;
 
                 default:
