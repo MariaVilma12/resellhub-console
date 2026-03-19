@@ -25,7 +25,7 @@ public class CreateListingService
         command.CommandText =
             @"INSERT INTO Listings
         (Title,Description,Category,Condition,Price,Status,SellerId)
-        VALUES($title,$desc,$cat,$cond,$price,'Available',$seller)";
+        VALUES($title,$desc,$cat,$cond,$price,'0',$seller)";
 
         command.Parameters.AddWithValue("$title", title);
         command.Parameters.AddWithValue("$desc", description);
